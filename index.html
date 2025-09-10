@@ -1,40 +1,325 @@
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>SQL w MS Access – Zadania 7.1–7.5</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>reveal.js</title>
+  <!-- Reveal.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css" id="theme">
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+  <style>
+    h1, h2, h3 { color: #FFD700; }
+    p, li { color: #FFFFFF; font-size: 1.1em; }
+    code { background: #222; color: #00FF7F; padding: 4px; border-radius: 4px; }
+    .highlight { color: #00BFFF; font-weight: bold; }
+    .important { color: #FF4500; font-weight: bold; }
+    img { border: 2px solid #00BFFF; border-radius: 10px; }
+  </style>
+</head>
+<body>
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+<div class="reveal">
+<div class="slides">
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+<!-- Intro -->
+<section>
+  <h1>🚀 SQL w MS Access</h1>
+  <h3>Realizacja zadań 7.1–7.5 krok po kroku</h3>
+  <p>Przewodnik dla osób, które <span class="highlight">nigdy wcześniej</span> nie pracowały z Access SQL.</p>
+</section>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+<!-- Przygotowanie -->
+<section>
+  <h2>📚 Zanim zaczniemy...</h2>
+  <ul>
+    <li>Zrozum, czym jest <span class="highlight">baza danych</span>.</li>
+    <li>Poznaj pojęcia: <span class="highlight">tabela</span>, <span class="highlight">rekord</span>, <span class="highlight">kolumna</span>.</li>
+    <li>Dowiedz się, czym jest <span class="highlight">SQL</span> – język zapytań do baz danych.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>🔧 Materiały do nauki</h2>
+  <ul>
+    <li>Podstawy SQL – <a href="https://www.w3schools.com/sql/" target="_blank">W3Schools SQL Tutorial</a></li>
+    <li>Podstawy Access – <a href="https://support.microsoft.com/pl-pl/access" target="_blank">Microsoft Access Support</a></li>
+    <li>Ćwiczenia z JOIN, GROUP BY, WHERE</li>
+  </ul>
+</section>
+
+<!-- Screenshoty przygotowania -->
+<section><h2>📷 Przygotowanie Accessa – krok 1</h2><img src="przygotowanie/1.png" alt="Przygotowanie Accessa krok 1" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 2</h2><img src="przygotowanie/2.png" alt="Przygotowanie Accessa krok 2" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 3</h2><img src="przygotowanie/3.png" alt="Przygotowanie Accessa krok 3" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 4</h2><img src="przygotowanie/4.png" alt="Przygotowanie Accessa krok 4" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 5</h2><img src="przygotowanie/5.png" alt="Przygotowanie Accessa krok 5" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 6</h2><img src="przygotowanie/6.png" alt="Przygotowanie Accessa krok 6" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 7</h2><img src="przygotowanie/7.png" alt="Przygotowanie Accessa krok 7" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 8</h2><img src="przygotowanie/8.png" alt="Przygotowanie Accessa krok 8" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 9</h2><img src="przygotowanie/9.png" alt="Przygotowanie Accessa krok 9" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 10</h2><img src="przygotowanie/10.png" alt="Przygotowanie Accessa krok 10" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 11</h2><img src="przygotowanie/11.png" alt="Przygotowanie Accessa krok 11" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 12</h2><img src="przygotowanie/12.png" alt="Przygotowanie Accessa krok 12" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 13</h2><img src="przygotowanie/13.png" alt="Przygotowanie Accessa krok 13" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 14</h2><img src="przygotowanie/14.png" alt="Przygotowanie Accessa krok 14" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 15</h2><img src="przygotowanie/15.png" alt="Przygotowanie Accessa krok 15" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 16</h2><img src="przygotowanie/16.png" alt="Przygotowanie Accessa krok 16" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 17</h2><img src="przygotowanie/17.png" alt="Przygotowanie Accessa krok 17" style="width:80%;"></section>
+<section><h2>📷 Przygotowanie Accessa – krok 18</h2><img src="przygotowanie/18.png" alt="Przygotowanie Accessa krok 18" style="width:80%;"></section>
+
+<section>
+  <h2>🗂 Struktura naszej bazy</h2>
+  <ul>
+    <li><span class="highlight">Laziki</span> – dane o łazikach</li>
+    <li><span class="highlight">Obszary</span> – nazwy i kody obszarów</li>
+    <li><span class="highlight">Pomiary</span> – dane pomiarowe</li>
+    <li><span class="highlight">Producent</span> – producenci łazików</li>
+  </ul>
+</section>
+
+<!-- Zadanie 7.1 -->
+<section>
+  <h2>💧 Zadanie 7.1 – Cel</h2>
+  <p>Znajdź obszar z <span class="important">największą ilością wody</span> (m³) na głębokości ≤ 100 m.</p>
+</section>
+
+<section>
+  <h2>Kod SQL</h2>
+  <pre><code class="sql">
+SELECT TOP 1 o.nazwa_obszaru,
+       SUM(p.ilosc) AS suma_wody_m3
+FROM obszary AS o
+INNER JOIN pomiary AS p
+    ON p.kod_obszaru = o.kod_obszaru
+WHERE p.glebokosc <= 100
+GROUP BY o.nazwa_obszaru
+ORDER BY SUM(p.ilosc) DESC;
+  </code></pre>
+</section>
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Łączymy obszary z pomiarami.</li>
+    <li>Filtrujemy tylko pomiary do 100 m głębokości.</li>
+    <li>Sumujemy ilość wody dla każdego obszaru.</li>
+    <li>Wybieramy obszar z największą sumą.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Analiza linia po linii</h2>
+  <ul>
+    <li><code>SELECT TOP 1</code> – wybierz tylko pierwszy rekord po sortowaniu.</li>
+    <li><code>SUM(p.ilosc)</code> – sumuje ilość wody.</li>
+    <li><code>INNER JOIN</code> – łączy dane z dwóch tabel po wspólnym polu.</li>
+    <li><code>WHERE p.glebokosc <= 100</code> – filtruje dane.</li>
+    <li><code>GROUP BY</code> – grupuje wyniki według obszaru.</li>
+    <li><code>ORDER BY ... DESC</code> – sortuje malejąco.</li>
+  </ul>
+</section>
+
+<!-- Zadanie 7.2 -->
+<section>
+  <h2>⏳ Zadanie 7.2 – Cel</h2>
+  <p>Znajdź łazik z <span class="important">najdłuższym okresem pomiarów</span> i podaj daty pierwszego i ostatniego pomiaru.</p>
+</section>
+
+<section>
+  <h2>Kod SQL</h2>
+  <pre><code class="sql">
+SELECT TOP 1 l.nazwa_lazika,
+       MIN(p.data_pomiaru) AS pierwszy_pomiar,
+       MAX(p.data_pomiaru) AS ostatni_pomiar,
+       DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) AS liczba_dni
+FROM laziki AS l
+INNER JOIN pomiary AS p
+    ON l.nr_lazika = p.nr_lazika
+GROUP BY l.nazwa_lazika
+ORDER BY DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) DESC;
+  </code></pre>
+</section>
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Łączymy łaziki z ich pomiarami.</li>
+    <li>Znajdujemy najwcześniejszy i najpóźniejszy pomiar.</li>
+    <li>Obliczamy różnicę w dniach.</li>
+    <li>Wybieramy łazik z największą różnicą.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Analiza linia po linii</h2>
+  <ul>
+    <li><code>MIN()</code> – najwcześniejsza data pomiaru.</li>
+    <li><code>MAX()</code> – najpóźniejsza data pomiaru.</li>
+    <li><code>DATEDIFF('d', ...)</code> – liczba dni między datami.</li>
+    <li><code>GROUP BY</code> – grupuje dane według łazika.</li>
+    <li><code>ORDER BY ... DESC</code> – sortuje od największej różnicy.</li>
+  </ul>
+</section>
+
+<!-- Zadanie 7.3 -->
+<section>
+  <h2>🛰 Zadanie 7.3 – Cel</h2>
+  <p>Znajdź obszary, gdzie <span class="important">nie było pomiaru</span> w roku wysłania łazika.</p>
+</section>
+
+<section>
+  <h2>Kod SQL</h2>
+  <pre><code class="sql">
+SELECT o.nazwa_obszaru
+FROM obszary AS o
+WHERE o.kod_obszaru NOT IN (
+    SELECT DISTINCT p.kod_obszaru
+    FROM pomiary AS p
+    INNER JOIN laziki AS l
+        ON p.nr_lazika = l.nr_lazika
+    WHERE YEAR(p.data_pomiaru) = l.rok_wyslania
+)
+ORDER BY o.nazwa_obszaru;
+  </code></pre>
+</section>
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Podzapytanie wybiera obszary, w których był pomiar w roku wysłania łazika.</li>
+    <li><span class="highlight">NOT IN</span> – odrzuca te obszary, które spełniają warunek w podzapytaniu.</li>
+    <li>W efekcie zostają tylko obszary bez takich pomiarów.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Analiza linia po linii</h2>
+  <ul>
+    <li><code>SELECT o.nazwa_obszaru</code> – wybieramy nazwy obszarów.</li>
+    <li><code>WHERE o.kod_obszaru NOT IN (...)</code> – filtrujemy, aby wykluczyć obszary z listy w podzapytaniu.</li>
+    <li>Podzapytanie:
+      <ul>
+        <li><code>SELECT DISTINCT p.kod_obszaru</code> – unikalne kody obszarów z pomiarami.</li>
+        <li><code>INNER JOIN laziki</code> – łączenie pomiarów z łazikami.</li>
+        <li><code>WHERE YEAR(p.data_pomiaru) = l.rok_wyslania</code> – tylko pomiary z roku wysłania.</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<!-- Zadanie 7.4 -->
+<section>
+  <h2>🌍 Zadanie 7.4 – Cel</h2>
+  <p>Znajdź łaziki, które <span class="important">wylądowały na południowej półkuli</span> i wykonywały pomiary na obu półkulach.</p>
+</section>
+
+<section>
+  <h2>Kod SQL</h2>
+  <pre><code class="sql">
+SELECT l.nazwa_lazika
+FROM Laziki AS l
+INNER JOIN Pomiary AS p
+    ON l.nr_lazika = p.nr_lazika
+WHERE l.wsp_ladowania LIKE "*S*"
+GROUP BY l.nazwa_lazika
+HAVING SUM(IIF(p.wspolrzedne LIKE "*N*", 1, 0)) > 0
+   AND SUM(IIF(p.wspolrzedne LIKE "*S*", 1, 0)) > 0;
+  </code></pre>
+</section>
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Filtrujemy łaziki, które wylądowały na południowej półkuli.</li>
+    <li>Sprawdzamy, czy w pomiarach są punkty z obu półkul.</li>
+    <li>Używamy <span class="highlight">HAVING</span> do warunków po grupowaniu.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Analiza linia po linii</h2>
+  <ul>
+    <li><code>WHERE l.wsp_ladowania LIKE "*S*"</code> – wybiera łaziki z literą "S" w współrzędnych lądowania.</li>
+    <li><code>GROUP BY l.nazwa_lazika</code> – grupuje dane według łazika.</li>
+    <li><code>HAVING SUM(IIF(...)) > 0</code> – sprawdza, czy są pomiary z półkuli północnej i południowej.</li>
+    <li><code>IIF</code> – funkcja warunkowa w Accessie, zwraca 1 jeśli warunek jest spełniony, 0 jeśli nie.</li>
+  </ul>
+</section>
+
+<!-- Zadanie 7.5 -->
+<section>
+  <h2>🏭 Zadanie 7.5 – Cel</h2>
+  <p>Podaj nazwy producentów, których łaziki badały obszar <span class="important">Arcadia</span> w roku <span class="highlight">2060</span>.</p>
+</section>
+
+<section>
+  <h2>Kod SQL</h2>
+  <pre><code class="sql">
+SELECT DISTINCT pr.nazwa
+FROM (Producent AS pr
+INNER JOIN Laziki AS l
+    ON pr.kod_producenta = l.kod_producenta)
+INNER JOIN (Pomiary AS pm
+INNER JOIN Obszary AS o
+    ON pm.kod_obszaru = o.kod_obszaru)
+    ON l.nr_lazika = pm.nr_lazika
+WHERE o.nazwa_obszaru = "Arcadia"
+  AND YEAR(pm.data_pomiaru) = 2060
+ORDER BY pr.nazwa;
+  </code></pre>
+</section>
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Łączymy cztery tabele: Producent, Laziki, Pomiary, Obszary.</li>
+    <li>Filtrujemy tylko pomiary w Arcadii z roku 2060.</li>
+    <li>Usuwamy duplikaty producentów.</li>
+    <li>Sortujemy alfabetycznie.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Analiza linia po linii</h2>
+  <ul>
+    <li><code>SELECT DISTINCT pr.nazwa</code> – wybiera unikalne nazwy producentów.</li>
+    <li><code>INNER JOIN</code> – łączy tabele po kluczach obcych.</li>
+    <li><code>WHERE o.nazwa_obszaru = "Arcadia"</code> – filtruje obszar.</li>
+    <li><code>YEAR(pm.data_pomiaru) = 2060</code> – filtruje rok pomiaru.</li>
+    <li><code>ORDER BY pr.nazwa</code> – sortuje wyniki alfabetycznie.</li>
+  </ul>
+</section>
+
+<!-- Podsumowanie -->
+<section>
+  <h2>🎯 Podsumowanie</h2>
+  <ul>
+    <li>Nauczyliśmy się łączyć tabele w Access SQL przy pomocy <span class="highlight">JOIN</span>.</li>
+    <li>Wykorzystaliśmy <span class="highlight">GROUP BY</span>, <span class="highlight">HAVING</span>, <span class="highlight">WHERE</span> i <span class="highlight">DISTINCT</span>.</li>
+    <li>Rozwiązaliśmy krok po kroku zadania 7.1–7.5.</li>
+    <li>Teraz możesz samodzielnie modyfikować zapytania i analizować inne dane.</li>
+  </ul>
+</section>
+
+<section>
+  <h1>💡 Dziękuję za uwagę!</h1>
+  <p>Spróbuj zmienić warunki w zapytaniach i zobacz, jak zmienia się wynik.</p>
+</section>
+
+</div>
+</div>
+
+<!-- Reveal.js -->
+<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'slide'
+  });
+</script>
+
+</body>
 </html>
