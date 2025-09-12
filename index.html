@@ -30,54 +30,417 @@
   <p>Przewodnik dla osób, które <span class="highlight">nigdy wcześniej</span> nie pracowały z Access SQL.</p>
 </section>
 
-<!-- Przygotowanie -->
+<!-- Slajd 1: Wprowadzenie do bazy danych -->
 <section>
-  <h2>📚 Zanim zaczniemy...</h2>
+  <h2>📚 Czym jest baza danych?</h2>
+  <p>
+    <strong>Baza danych</strong> to uporządkowany zbiór informacji, który przechowujemy w sposób cyfrowy.
+  </p>
+  <p>
+    Można ją porównać do elektronicznego segregatora lub szafy z dokumentami — wszystko jest posegregowane, łatwe do znalezienia i przeszukania.
+  </p>
+</section>
+
+<!-- Slajd 2: Czym jest tabela -->
+<section>
+  <h2>📋 Czym jest tabela?</h2>
+  <p>
+    W bazie danych informacje są przechowywane w <strong>tabelach</strong>.
+  </p>
+  <p>
+    Tabela przypomina arkusz kalkulacyjny: ma <em>wiersze</em> i <em>kolumny</em>.
+  </p>
+</section>
+
+<!-- Slajd 3: Elementy tabeli -->
+<section>
+  <h2>🔍 Elementy tabeli</h2>
   <ul>
-    <li>Zrozum, czym jest <span class="highlight">baza danych</span>.</li>
-    <li>Poznaj pojęcia: <span class="highlight">tabela</span>, <span class="highlight">rekord</span>, <span class="highlight">kolumna</span>.</li>
-    <li>Dowiedz się, czym jest <span class="highlight">SQL</span> – język zapytań do baz danych.</li>
+    <li><strong>Kolumna</strong> – określa typ danych, np. imię, nazwisko, e-mail.</li>
+    <li><strong>Rekord</strong> – jeden wiersz w tabeli, czyli jeden zestaw danych, np. jeden klient.</li>
+    <li><strong>Tabela</strong> – zbiór rekordów i kolumn, np. tabela „Klienci” zawiera dane wszystkich klientów.</li>
   </ul>
 </section>
 
+<!-- Slajd 4: Przykład tabeli -->
 <section>
-  <h2>🔧 Materiały do nauki</h2>
+  <h2>📊 Przykład tabeli „Klienci”</h2>
+  <table style="width:100%; border-collapse:collapse;" border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Jan</td>
+        <td>Kowalski</td>
+        <td>jan.kowalski@example.com</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Alicja</td>
+        <td>Zielińska</td>
+        <td>alicja.zielinska@example.com</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Slajd 5: Interpretacja tabeli -->
+<section>
+  <h2>📌 Jak czytać tabelę?</h2>
+  <p>
+    Każdy wiersz to jeden klient, a każda kolumna to jeden typ informacji.
+  </p>
+  <p>
+    Dzięki takiej strukturze możemy łatwo przeszukiwać dane, sortować je, filtrować i analizować.
+  </p>
+</section>
+
+<!-- Slajd 6: Co dalej? -->
+<section>
+  <h2>➡️ Co dalej?</h2>
+  <p>
+    W kolejnych slajdach pokażemy, jak za pomocą języka SQL tworzyć takie tabele, dodawać dane, modyfikować je i wyszukiwać konkretne informacje.
+  </p>
+</section>
+
+<!-- Slajd: Wprowadzenie -->
+<section>
+  <h2>🧱 Podstawowe instrukcje SQL</h2>
+  <p>
+    Skoro wiemy już, czym jest baza danych i jak wygląda tabela, czas nauczyć się, jak za pomocą SQL możemy tworzyć, modyfikować i przeszukiwać dane. Poniżej znajdziesz najważniejsze instrukcje SQL, które stanowią fundament pracy z bazami danych.
+  </p>
+</section>
+
+<!-- Slajd: CREATE TABLE -->
+<section>
+  <h2>📌 Tworzenie tabeli – <code>CREATE TABLE</code></h2>
+  <pre>
+CREATE TABLE Klienci (
+  ID INT PRIMARY KEY,
+  Imie VARCHAR(50),
+  Nazwisko VARCHAR(50),
+  Email VARCHAR(100)
+);
+  </pre>
+  <p>
+    Tworzymy tabelę „Klienci” z czterema kolumnami. <code>ID</code> to unikalny identyfikator, a <code>VARCHAR(n)</code> oznacza tekst o maksymalnej długości <code>n</code> znaków.
+  </p>
+</section>
+
+<!-- Slajd: INSERT -->
+<section>
+  <h2>📌 Dodawanie danych – <code>INSERT INTO</code></h2>
+  <pre>
+INSERT INTO Klienci (ID, Imie, Nazwisko, Email)
+VALUES (1, 'Jan', 'Kowalski', 'jan.kowalski@example.com');
+  </pre>
+</section>
+
+<!-- Slajd: SELECT -->
+<section>
+  <h2>📌 Pobieranie danych – <code>SELECT</code></h2>
+  <pre>
+SELECT * FROM Klienci;
+SELECT Imie, Email FROM Klienci;
+  </pre>
+  <p>Pierwsze zapytanie pobiera wszystkie kolumny, drugie tylko imię i e-mail.</p>
+</section>
+
+<!-- Slajd: UPDATE -->
+<section>
+  <h2>📌 Aktualizacja danych – <code>UPDATE</code></h2>
+  <pre>
+UPDATE Klienci
+SET Email = 'jan.nowy@example.com'
+WHERE ID = 1;
+  </pre>
+</section>
+
+<!-- Slajd: DELETE -->
+<section>
+  <h2>📌 Usuwanie danych – <code>DELETE</code></h2>
+  <pre>
+DELETE FROM Klienci
+WHERE ID = 1;
+  </pre>
+</section>
+
+<!-- Slajd: WHERE -->
+<section>
+  <h2>📌 Filtrowanie danych – <code>WHERE</code></h2>
+  <pre>
+SELECT * FROM Klienci
+WHERE Nazwisko = 'Kowalski';
+  </pre>
+</section>
+
+<!-- Slajd: ORDER BY -->
+<section>
+  <h2>📌 Sortowanie danych – <code>ORDER BY</code></h2>
+  <pre>
+SELECT * FROM Klienci
+ORDER BY Nazwisko ASC;
+  </pre>
+  <p><code>ASC</code> – rosnąco, <code>DESC</code> – malejąco.</p>
+</section>
+
+<!-- Slajd: JOIN -->
+<section>
+  <h2>🔗 Łączenie danych – <code>JOIN</code></h2>
+  <p>Łączymy dane z tabel <code>Klienci</code> i <code>Zamowienia</code>.</p>
+  <pre>
+SELECT Klienci.Imie, Zamowienia.Produkt, Zamowienia.DataZamowienia
+FROM Zamowienia
+INNER JOIN Klienci ON Zamowienia.KlientID = Klienci.ID;
+  </pre>
+</section>
+
+<!-- Slajd: Typy JOIN -->
+<section>
+  <h2>🔗 Typy połączeń</h2>
   <ul>
-    <li>Podstawy SQL – <a href="https://www.w3schools.com/sql/" target="_blank">W3Schools SQL Tutorial</a></li>
-    <li>Podstawy Access – <a href="https://support.microsoft.com/pl-pl/access" target="_blank">Microsoft Access Support</a></li>
-    <li>Ćwiczenia z JOIN, GROUP BY, WHERE</li>
+    <li><code>LEFT JOIN</code> – wszystkie z lewej tabeli</li>
+    <li><code>RIGHT JOIN</code> – wszystkie z prawej tabeli</li>
+    <li><code>FULL JOIN</code> – wszystko z obu tabel</li>
   </ul>
 </section>
 
-<!-- Screenshoty przygotowania -->
-<section><h2>📷 Przygotowanie Accessa – krok 1</h2><img src="przygotowanie/1.png" alt="Przygotowanie Accessa krok 1" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 2</h2><img src="przygotowanie/2.png" alt="Przygotowanie Accessa krok 2" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 3</h2><img src="przygotowanie/3.png" alt="Przygotowanie Accessa krok 3" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 4</h2><img src="przygotowanie/4.png" alt="Przygotowanie Accessa krok 4" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 5</h2><img src="przygotowanie/5.png" alt="Przygotowanie Accessa krok 5" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 6</h2><img src="przygotowanie/6.png" alt="Przygotowanie Accessa krok 6" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 7</h2><img src="przygotowanie/7.png" alt="Przygotowanie Accessa krok 7" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 8</h2><img src="przygotowanie/8.png" alt="Przygotowanie Accessa krok 8" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 9</h2><img src="przygotowanie/9.png" alt="Przygotowanie Accessa krok 9" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 10</h2><img src="przygotowanie/10.png" alt="Przygotowanie Accessa krok 10" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 11</h2><img src="przygotowanie/11.png" alt="Przygotowanie Accessa krok 11" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 12</h2><img src="przygotowanie/12.png" alt="Przygotowanie Accessa krok 12" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 13</h2><img src="przygotowanie/13.png" alt="Przygotowanie Accessa krok 13" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 14</h2><img src="przygotowanie/14.png" alt="Przygotowanie Accessa krok 14" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 15</h2><img src="przygotowanie/15.png" alt="Przygotowanie Accessa krok 15" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 16</h2><img src="przygotowanie/16.png" alt="Przygotowanie Accessa krok 16" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 17</h2><img src="przygotowanie/17.png" alt="Przygotowanie Accessa krok 17" style="width:80%;"></section>
-<section><h2>📷 Przygotowanie Accessa – krok 18</h2><img src="przygotowanie/18.png" alt="Przygotowanie Accessa krok 18" style="width:80%;"></section>
-
+<!-- Slajd: LIKE -->
 <section>
-  <h2>🗂 Struktura naszej bazy</h2>
+  <h2>🔍 Wyszukiwanie wzorców – <code>LIKE</code></h2>
+  <pre>
+SELECT * FROM Klienci
+WHERE Email LIKE '%example.com';
+  </pre>
+</section>
+
+<!-- Slajd: IN -->
+<section>
+  <h2>🔍 Wyszukiwanie wartości – <code>IN</code></h2>
+  <pre>
+SELECT * FROM Klienci
+WHERE Nazwisko IN ('Kowalski', 'Nowak', 'Wiśniewski');
+  </pre>
+</section>
+
+<!-- Slajd: BETWEEN -->
+<section>
+  <h2>🔍 Zakres wartości – <code>BETWEEN</code></h2>
+  <pre>
+SELECT * FROM Zamowienia
+WHERE DataZamowienia BETWEEN '2025-01-01' AND '2025-12-31';
+  </pre>
+</section>
+
+<!-- Slajd: GROUP BY -->
+<section>
+  <h2>📊 Grupowanie danych – <code>GROUP BY</code></h2>
+  <pre>
+SELECT Nazwisko, COUNT(*) AS LiczbaZamowien
+FROM Klienci
+JOIN Zamowienia ON Klienci.ID = Zamowienia.KlientID
+GROUP BY Nazwisko;
+  </pre>
+</section>
+
+<!-- Slajd: Funkcje agregujące -->
+<section>
+  <h2>📊 Funkcje agregujące</h2>
   <ul>
-    <li><span class="highlight">Laziki</span> – dane o łazikach</li>
-    <li><span class="highlight">Obszary</span> – nazwy i kody obszarów</li>
-    <li><span class="highlight">Pomiary</span> – dane pomiarowe</li>
-    <li><span class="highlight">Producent</span> – producenci łazików</li>
+    <li><code>COUNT()</code> – liczba rekordów</li>
+    <li><code>SUM()</code> – suma wartości</li>
+    <li><code>AVG()</code> – średnia</li>
+    <li><code>MAX()</code> / <code>MIN()</code> – największa / najmniejsza wartość</li>
+  </ul>
+  <pre>
+SELECT AVG(Cena) AS SredniaCena
+FROM Produkty;
+  </pre>
+</section>
+
+<!-- Slajd: Ćwiczenia -->
+<section>
+  <h2>🧪 Ćwiczenia praktyczne z SQL</h2>
+  <p>
+    Poniżej znajdziesz trzy zadania, które pomogą Ci przećwiczyć podstawowe instrukcje SQL. Spróbuj rozwiązać je samodzielnie.
+  </p>
+</section>
+
+<!-- Slajd: Zadanie 1 -->
+<section>
+  <h2>🔹 Zadanie 1: Dodaj nowego klienta</h2>
+  <p>
+    Masz tabelę <code>Klienci</code> z kolumnami: <code>ID</code>, <code>Imie</code>, <code>Nazwisko</code>, <code>Email</code>.
+    Dodaj nowy rekord z następującymi danymi:
+  </p>
+  <ul>
+    <li><strong>ID:</strong> 10</li>
+    <li><strong>Imię:</strong> Alicja</li>
+    <li><strong>Nazwisko:</strong> Zielińska</li>
+    <li><strong>Email:</strong> alicja.zielinska@example.com</li>
   </ul>
 </section>
+
+<!-- Slajd: Odpowiedź do Zadania 1 -->
+<section>
+  <h2>✅ Odpowiedź – Zadanie 1</h2>
+  <pre>
+INSERT INTO Klienci (ID, Imie, Nazwisko, Email)
+VALUES (10, 'Alicja', 'Zielińska', 'alicja.zielinska@example.com');
+  </pre>
+</section>
+
+<!-- Slajd: Zadanie 2 -->
+<section>
+  <h2>🔹 Zadanie 2: Zamówienia z 2025 roku</h2>
+  <p>
+    Masz tabelę <code>Zamowienia</code> z kolumnami: <code>ID</code>, <code>KlientID</code>, <code>Produkt</code>, <code>DataZamowienia</code>.
+    Napisz zapytanie, które wyświetli wszystkie zamówienia złożone w roku 2025.
+  </p>
+</section>
+
+<!-- Slajd: Odpowiedź do Zadania 2 -->
+<section>
+  <h2>✅ Odpowiedź – Zadanie 2</h2>
+  <pre>
+SELECT * FROM Zamowienia
+WHERE DataZamowienia BETWEEN '2025-01-01' AND '2025-12-31';
+  </pre>
+  <p><em>Alternatywnie:</em></p>
+  <pre>
+SELECT * FROM Zamowienia
+WHERE YEAR(DataZamowienia) = 2025;
+  </pre>
+  <p><em>Uwaga:</em> Funkcja <code>YEAR()</code> może nie działać w każdej bazie danych — <code>BETWEEN</code> jest bardziej uniwersalne.</p>
+</section>
+
+<!-- Slajd: Zadanie 3 -->
+<section>
+  <h2>🔹 Zadanie 3: Liczba zamówień dla każdego klienta</h2>
+  <p>
+    Połącz tabele <code>Klienci</code> i <code>Zamowienia</code>, aby wyświetlić nazwisko klienta oraz liczbę jego zamówień.
+    Wyniki pogrupuj według nazwiska.
+  </p>
+</section>
+
+<!-- Slajd: Odpowiedź do Zadania 3 -->
+<section>
+  <h2>✅ Odpowiedź – Zadanie 3</h2>
+  <pre>
+SELECT Klienci.Nazwisko, COUNT(*) AS LiczbaZamowien
+FROM Klienci
+JOIN Zamowienia ON Klienci.ID = Zamowienia.KlientID
+GROUP BY Klienci.Nazwisko;
+  </pre>
+</section>
+
+<!-- Slajd: Wprowadzenie do przygotowania Accessa -->
+<section>
+  <h2>📷 Przygotowanie Accessa – krok po kroku</h2>
+  <p>
+    Poniżej znajdziesz zestaw instrukcji obrazkowych, które pokazują, jak przygotować środowisko pracy w Microsoft Access. Każdy krok znajduje się na osobnym slajdzie, aby ułatwić przeglądanie.
+  </p>
+</section>
+
+<!-- Slajdy krok po kroku -->
+<section>
+  <h2>📷 Krok 1</h2>
+  <img src="przygotowanie/1.png" alt="Przygotowanie Accessa krok 1" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 2</h2>
+  <img src="przygotowanie/2.png" alt="Przygotowanie Accessa krok 2" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 3</h2>
+  <img src="przygotowanie/3.png" alt="Przygotowanie Accessa krok 3" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 4</h2>
+  <img src="przygotowanie/4.png" alt="Przygotowanie Accessa krok 4" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 5</h2>
+  <img src="przygotowanie/5.png" alt="Przygotowanie Accessa krok 5" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 6</h2>
+  <img src="przygotowanie/6.png" alt="Przygotowanie Accessa krok 6" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 7</h2>
+  <img src="przygotowanie/7.png" alt="Przygotowanie Accessa krok 7" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 8</h2>
+  <img src="przygotowanie/8.png" alt="Przygotowanie Accessa krok 8" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 9</h2>
+  <img src="przygotowanie/9.png" alt="Przygotowanie Accessa krok 9" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 10</h2>
+  <img src="przygotowanie/10.png" alt="Przygotowanie Accessa krok 10" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 11</h2>
+  <img src="przygotowanie/11.png" alt="Przygotowanie Accessa krok 11" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 12</h2>
+  <img src="przygotowanie/12.png" alt="Przygotowanie Accessa krok 12" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 13</h2>
+  <img src="przygotowanie/13.png" alt="Przygotowanie Accessa krok 13" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 14</h2>
+  <img src="przygotowanie/14.png" alt="Przygotowanie Accessa krok 14" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 15</h2>
+  <img src="przygotowanie/15.png" alt="Przygotowanie Accessa krok 15" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 16</h2>
+  <img src="przygotowanie/16.png" alt="Przygotowanie Accessa krok 16" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 17</h2>
+  <img src="przygotowanie/17.png" alt="Przygotowanie Accessa krok 17" style="width:80%;">
+</section>
+
+<section>
+  <h2>📷 Krok 18</h2>
+  <img src="przygotowanie/18.png" alt="Przygotowanie Accessa krok 18" style="width:80%;">
+</section>
+
+
 
 <!-- Zadanie 7.1 -->
 <section>
@@ -120,6 +483,25 @@ ORDER BY SUM(p.ilosc) DESC;
     <li><code>ORDER BY ... DESC</code> – sortuje malejąco.</li>
   </ul>
 </section>
+<section>
+ <!-- Slajd: Opis wyniku -->
+<section>
+  <h2>📸 Wynik działania zapytania w Accessie</h2>
+  <p>
+    Po uruchomieniu zapytania SQL w programie Microsoft Access, otrzymujemy wynik, który pokazuje <strong>obszar z największą ilością wody</strong> na głębokości do 100 metrów.
+  </p>
+  <p>
+    Na kolejnym slajdzie zobaczysz zrzut ekranu przedstawiający rezultat działania zapytania.
+  </p>
+</section>
+
+<!-- Slajd: Zrzut ekranu -->
+<section>
+  <h2>📷 Zrzut ekranu – Zadanie 7.1</h2>
+  <img src="odpowiedzi/7.1.png" alt="Wynik zapytania SQL – Zadanie 7.1" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+
+
 
 <!-- Zadanie 7.2 -->
 <section>
@@ -163,6 +545,25 @@ ORDER BY DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) DESC;
   </ul>
 </section>
 
+<!-- Slajd: Opis wyniku – Zadanie 7.2 -->
+<section>
+  <h2>📸 Wynik działania zapytania w Accessie</h2>
+  <p>
+    Po uruchomieniu zapytania SQL w programie Microsoft Access, otrzymujemy wynik, który pokazuje <strong>łazika wykonującego pomiary przez najdłuższy okres czasu</strong>.
+  </p>
+  <p>
+    Oznacza to największą różnicę między datą pierwszego a ostatniego pomiaru. Na kolejnym slajdzie zobaczysz zrzut ekranu z wynikiem.
+  </p>
+</section>
+
+<!-- Slajd: Zrzut ekranu – Zadanie 7.2 -->
+<section>
+  <h2>📷 Zrzut ekranu – Zadanie 7.2</h2>
+  <img src="odpowiedzi/7.2.png" alt="Wynik zapytania SQL – Zadanie 7.2" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+
+
+
 <!-- Zadanie 7.3 -->
 <section>
   <h2>🛰 Zadanie 7.3 – Cel</h2>
@@ -194,20 +595,44 @@ ORDER BY o.nazwa_obszaru;
   </ul>
 </section>
 
+<!-- Slajd 1: Analiza głównych instrukcji -->
 <section>
-  <h2>Analiza linia po linii</h2>
-  <ul>
+  <h2>🔍 Analiza linia po linii – część 1</h2>
+  <ul style="font-size:0.95em;">
     <li><code>SELECT o.nazwa_obszaru</code> – wybieramy nazwy obszarów.</li>
     <li><code>WHERE o.kod_obszaru NOT IN (...)</code> – filtrujemy, aby wykluczyć obszary z listy w podzapytaniu.</li>
-    <li>Podzapytanie:
-      <ul>
-        <li><code>SELECT DISTINCT p.kod_obszaru</code> – unikalne kody obszarów z pomiarami.</li>
-        <li><code>INNER JOIN laziki</code> – łączenie pomiarów z łazikami.</li>
-        <li><code>WHERE YEAR(p.data_pomiaru) = l.rok_wyslania</code> – tylko pomiary z roku wysłania.</li>
-      </ul>
-    </li>
+    <li>Podzapytanie – co się dzieje wewnątrz nawiasu:</li>
   </ul>
 </section>
+
+<!-- Slajd 2: Analiza podzapytania -->
+<section>
+  <h2>🔍 Analiza linia po linii – część 2</h2>
+  <ul style="font-size:0.95em;">
+    <li><code>SELECT DISTINCT p.kod_obszaru</code> – unikalne kody obszarów z pomiarami.</li>
+    <li><code>INNER JOIN laziki</code> – łączenie pomiarów z łazikami.</li>
+    <li><code>WHERE YEAR(p.data_pomiaru) = l.rok_wyslania</code> – tylko pomiary z roku wysłania.</li>
+  </ul>
+</section>
+
+<!-- Slajd: Opis wyniku – Zadanie 7.3 -->
+<section>
+  <h2>📸 Wynik działania zapytania w Accessie</h2>
+  <p>
+    Po uruchomieniu zapytania SQL w programie Microsoft Access, otrzymujemy wynik, który pokazuje <strong>listę obszarów, w których nie wykonano żadnego pomiaru w roku wysłania łazika</strong>.
+  </p>
+  <p>
+    Na kolejnym slajdzie zobaczysz zrzut ekranu z rezultatem działania zapytania.
+  </p>
+</section>
+
+<!-- Slajd: Zrzut ekranu – Zadanie 7.3 -->
+<section>
+  <h2>📷 Zrzut ekranu – Zadanie 7.3</h2>
+  <img src="odpowiedzi/7.3.png" alt="Wynik zapytania SQL – Zadanie 7.3" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+
+
 
 <!-- Zadanie 7.4 -->
 <section>
@@ -247,6 +672,25 @@ HAVING SUM(IIF(p.wspolrzedne LIKE "*N*", 1, 0)) > 0
     <li><code>IIF</code> – funkcja warunkowa w Accessie, zwraca 1 jeśli warunek jest spełniony, 0 jeśli nie.</li>
   </ul>
 </section>
+
+<!-- Slajd: Opis wyniku – Zadanie 7.4 -->
+<section>
+  <h2>📸 Wynik działania zapytania w Accessie</h2>
+  <p>
+    Po uruchomieniu zapytania SQL w programie Microsoft Access, otrzymujemy wynik, który pokazuje <strong>łaziki wylądowane na południowej półkuli</strong>, które wykonywały pomiary zarówno na półkuli północnej, jak i południowej.
+  </p>
+  <p>
+    Na kolejnym slajdzie zobaczysz zrzut ekranu z rezultatem działania zapytania.
+  </p>
+</section>
+
+<!-- Slajd: Zrzut ekranu – Zadanie 7.4 -->
+<section>
+  <h2>📷 Zrzut ekranu – Zadanie 7.4</h2>
+  <img src="odpowiedzi/7.4.png" alt="Wynik zapytania SQL – Zadanie 7.4" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+
+
 
 <!-- Zadanie 7.5 -->
 <section>
