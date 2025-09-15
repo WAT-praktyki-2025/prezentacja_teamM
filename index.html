@@ -33,39 +33,91 @@
   });
 
   function makeEditable(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
-    canvas.width = img.naturalWidth || 800;
-    canvas.height = img.naturalHeight || 600;
+  canvas.width = img.naturalWidth || 800;
+  canvas.height = img.naturalHeight || 600;
 
-    // zachowaj widoczne rozmiary (skalowanie CSS)
-    canvas.style.width = img.style.width || img.getAttribute('width') || '80%';
-    canvas.style.height = img.style.height || 'auto';
-    canvas.className = img.className;
+  // zachowaj widoczne rozmiary (skalowanie CSS)
+  canvas.style.width = img.style.width || img.getAttribute('width') || '80%';
+  canvas.style.height = img.style.height || 'auto';
+  canvas.className = img.className;
 
-    img.parentNode.replaceChild(canvas, img);
+  img.parentNode.replaceChild(canvas, img);
 
-    // narysuj obraz i zapisz oryginał (ImageData)
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    try { canvas._origImageData = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch (e) { canvas._origImageData = null; }
+  // narysuj obraz i zapisz oryginał (ImageData)
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  try { canvas._origImageData = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch (e) { canvas._origImageData = null; }
 
-    // klik -> spotlight pod kursorem (przyciemnione tło + rozjaśniony okrąg z miękkimi krawędziami)
-    canvas.addEventListener('click', (ev) => {
-      const r = canvas.getBoundingClientRect();
-      const x = (ev.clientX - r.left) * (canvas.width / r.width);
-      const y = (ev.clientY - r.top) * (canvas.height / r.height);
-      const radius = Math.round(Math.min(canvas.width, canvas.height) * 0.18); // dostosuj
-      const darkAlpha = 0.65;   // przyciemnienie tła (0..1)
-      const brighten = 0.20;    // siła rozjaśnienia środka (0..1)
-      applySpotlightBrightCenter(ctx, canvas, x, y, radius, darkAlpha, brighten);
-    });
-
-    // dblclick -> przywróć oryginał
-    canvas.addEventListener('dblclick', () => {
-      if (canvas._origImageData) ctx.putImageData(canvas._origImageData, 0, 0);
-    });
+  // jeśli obraz ma atrybut data-darkrects — zastosuj stałe przyciemnienie z oknami
+  const raw = img.getAttribute('data-darkrects'); // format: "x,y,w,h;x,y,w,h" w procentach
+  if (raw && canvas._origImageData) {
+    const rects = raw.split(';').map(s => {
+      const parts = s.split(',').map(Number);
+      if (parts.length !== 4 || parts.some(isNaN)) return null;
+      return { x: parts[0], y: parts[1], w: parts[2], h: parts[3] };
+    }).filter(Boolean);
+    if (rects.length) {
+      applyDarkRects(ctx, canvas, rects, /*darkAlpha*/0.66, /*border*/true);
+    }
   }
+
+  // klik -> spotlight pod kursorem (pozostawiamy istniejącą funkcję interaktywną)
+  canvas.addEventListener('click', (ev) => {
+    const r = canvas.getBoundingClientRect();
+    const x = (ev.clientX - r.left) * (canvas.width / r.width);
+    const y = (ev.clientY - r.top) * (canvas.height / r.height);
+    const radius = Math.round(Math.min(canvas.width, canvas.height) * 0.18);
+    const darkAlpha = 0.65;
+    const brighten = 0.20;
+    applySpotlightBrightCenter(ctx, canvas, x, y, radius, darkAlpha, brighten);
+  });
+
+  // dblclick -> przywróć oryginał
+  canvas.addEventListener('dblclick', () => {
+    if (canvas._origImageData) ctx.putImageData(canvas._origImageData, 0, 0);
+  });
+}
+
+// r: [{x:%,y:%,w:%,h:%}, ...]
+function applyDarkRects(ctx, canvas, rects, darkAlpha = 0.66, drawBorder = false) {
+  if (!canvas._origImageData) return;
+  // przywróć oryginał
+  ctx.putImageData(canvas._origImageData, 0, 0);
+
+  const w = canvas.width, h = canvas.height;
+
+  // nałóż przyciemnienie na cały obraz
+  ctx.save();
+  ctx.fillStyle = `rgba(0,0,0,${darkAlpha})`;
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+
+  // przygotuj offscreen z oryginałem
+  const off = document.createElement('canvas');
+  off.width = w; off.height = h;
+  const offCtx = off.getContext('2d');
+  offCtx.putImageData(canvas._origImageData, 0, 0);
+
+  // dla każdego prostokąta przywróć oryginalny fragment (twarda krawędź)
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  rects.forEach(r => {
+    const sx = Math.round(w * (r.x / 100));
+    const sy = Math.round(h * (r.y / 100));
+    const sw = Math.round(w * (r.w / 100));
+    const sh = Math.round(h * (r.h / 100));
+    if (sw <= 0 || sh <= 0) return;
+    ctx.drawImage(off, sx, sy, sw, sh, sx, sy, sw, sh);
+    if (drawBorder) {
+      ctx.lineWidth = Math.max(2, Math.round(Math.min(w, h) * 0.0025));
+      ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+      ctx.strokeRect(sx + 0.5, sy + 0.5, sw - 1, sh - 1);
+    }
+  });
+  ctx.restore();
+}
 
   // Rysuje efekt: 1) przywraca oryginał, 2) nakłada półprzezroczyste przyciemnienie,
   // 3) wycina z przyciemnienia miękkie okno (destination-out), 4) lekko rozjaśnia środek (lighter).
@@ -1001,7 +1053,63 @@ ORDER BY pr.nazwa;
 <section>
   <h2>Rozwiązanie</h2>
   <small>Wynik</small>
+  <br>
   <img src="Kwerendy_acces/24.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+</section>
+<section>
+  <section>
+    <h2> Access okno pracy</h2>
+  </section>
+  <section>
+    <h3>Menu wstążki - Projekt Kwerendy </h3>
+    <small>Zawiera wszystkie narzędzia potrzebne do pracy – tworzenie tabel, kwerend, import danych, zarządzanie relacjami. W zakładce Projekt kwerendy są przyciski do dodawania tabel, kolumn i ustawiania grupowania czy sum.</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="0,5,100,17">
+</section>
+ <section>
+    <h3>Menu wstążki - Projekt Kwerendy </h3>
+    <small>Szczególnie przydatne przyciski to: Sumy, konstruktor, i zwróć(określa ile rekordów ma być wyświetlonych)</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="40,16,8,4; 49,16,9,4; 59,10,3,9">
+</section>
+ <section>
+    <h3>Sumy </h3>
+    <small> Przycisk Sumy w Accessie dodaje w siatce kwerendy wiersz „Suma”. Dzięki temu możesz wykonywać operacje agregujące, takie jak <strong>Sumy, Średnie, Minimum, Maksimum czy Grupowanie</strong>. Ułatwia to analizę danych bez potrzeby pisania zapytań SQL ręcznie.</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="13,77,70,2; 59,10,3,9">
+</section>
+<section>
+    <h3>Kreator </h3>
+    <small>Aby wogóle go użyć trzeba najpierw kliknąć na jedną z komórek w siatce kwerendy(pasek na dole)(zaznaczone)</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="40,16,8,4; 25,73,8,2">
+    <small>Konstruktor w Accessie pozwala na ręczne budowanie kwerend w trybie SQL lub projektowym. Dzięki niemu możesz dodawać tabele, ustalać relacje między nimi oraz wybierać pola, które znajdą się w wynikach. Daje też możliwość ustawiania warunków, sortowania i funkcji agregujących (np. suma, minimum, maksimum).</small>
+</section>
+<section>
+    <h3>Kreator </h3>
+    <small>Okno konstruktora</small>
+    <img src="Kwerendy_acces/27.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+    </section>
+<section>
+    <h3>Panel nawigacji </h3>
+    <small>Wyświetla listę wszystkich obiektów w bazie: tabele, kwerendy, formularze i raporty. Ułatwia szybkie przechodzenie między elementami bazy danych.</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="0,23,11,70">
+    <small>Poprzez chwycenie i przeciągnięcie obiektu z panelu nawigacji możesz łatwo dodawać go do projektu.</small>
+</section>
+<section>
+    <h3>Obszar projektu kwerendy </h3>
+    <small>Tutaj przeciągasz i łączysz tabele, aby tworzyć zapytania łączące dane z różnych źródeł. Możesz też dodawać konkretne pola, które mają być uwzględnione w wynikach.</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="11,22,70,50">
+    <small>W tym obszarze mozesz też łączyć klucze podstawowe poprzez przeciąganie tych pól.</small>
+</section>
+<section>
+    <h3>Siatka kwerendy </h3>
+    <small>Służy do definiowania, które pola mają być wyświetlane w wynikach, w jakiej kolejności i z jakimi warunkami. Możesz też ustawiać sumowania, kryteria oraz sortowanie.</small>
+    <img src="Kwerendy_acces/26.png" alt="Widok tabeli w Accessie" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;"data-darkrects="11,72,73,25">
+    <small>Zastępuje ona warunki które normalnie trzeba pisać za pomocą SQL - możesz w niej ustawiać kryteria filtrowania, sortowania oraz agregacji danych. Poszczególne nazwy dostępnych funkcji są tłumaczeniem z angielskeigo funkcji SQL</small>
+</section>
+<section>
+  <h3>Podsumowanie</h3>
+  <small>W tej sekcji omówiliśmy podstawowe elementy interfejsu użytkownika w Accessie, które ułatwiają pracę z kwerendami. Dzięki zrozumieniu tych komponentów, będziesz w stanie efektywniej tworzyć i modyfikować zapytania w swojej bazie danych.</small>
+  <p>POWODZENIA :)</p>
+</section>
 </section>
 <section>
   <h1>💡 Dziękuję za uwagę!</h1>
