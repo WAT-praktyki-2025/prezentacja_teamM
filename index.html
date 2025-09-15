@@ -846,13 +846,162 @@ ORDER BY pr.nazwa;
 <section>
 <!--kreator kwerendy access-->
 <section>
-  <h2> Zadania 7.1-7.5 z urzyciem kreatora kwerend MS Access</h2>
+  <h2> Zadania 7.1-7.4 z urzyciem kreatora kwerend MS Access</h2>
 </section>
 <section>
   <h2>💧 Zadanie 7.1 – Cel</h2>
   <p>Znajdź obszar z <span class="important">największą ilością wody</span> (m³) na głębokości ≤ 100 m.</p>
 </section>
-<section></section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Na zrzucie w sekcji kwerendy may do dyspozycji 3 okna: Kreator kwerend, Projekt Kwerendy, Kwerenda SQL</small>
+  <img src="Kwerendy_acces/1.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  </small>
+  <small>Wybieramy Projekt Kwerendy</small>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Po uruchomieniu lewym przyciskiem myszy możemy przeciągać wybrane tabele na obszar projektowania </small>
+  <img src="Kwerendy_acces/2.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small>Jeżeli klucze podstawowe są poprawnie zdefiniowane, program automatycznie je ze sobą połączy,
+     jeżeli się tak nie stanie trzeba wykonać to ręcznie.</small>
+     <br>
+      <small>Ten proces odpowiada łączeniu tabel w SQL.</small>
+    <hr>
+    <small> zawsze można to sprawdzić, choć nie zawsze zadziała poprawnie :)  - lewy góny róg i kliknąć widok w SQL</small>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Przeciągamy interesujące nas pola do dolnej części okna projektowania kwerendy</small>
+  <img src="Kwerendy_acces/3.1.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small>W tym przypadku są to nazwa_obszaru z tabeli obszary oraz ilosc i glebokosc z tabeli pomiary</small>
+  <hr>
+  <small>Zawsze można je wpisać ręcznie, ale nie zalecam</small>
+
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Aby uwidocznić pole do wyboru funkcji sortujących trzeba kliknąć w pole sumy w prawym górnym rogu</small>
+  <img src="Kwerendy_acces/3.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  
+
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>w naszym zadaniu mamy wyszukać obszr o największej ilości wody na głębokosći ≤ 100m 
+    więc: w polu kryteria wpisujemy <=100 przy kolumnie odpowiadającej głębokości, w polu sortuj po ilości ustalamy malejąco </small>
+  <img src="Kwerendy_acces/4.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small>ponieważ jest wiele pomiarów więc aby wyliczyc je wszystkie trzeba je zsumować zaznaczając w oknie suma: sumuj przy ilości </small>
+  <hr>
+  <small>pozostałe pola mają wpisane grupuj według powoduje to że rekordy się nie powielają,a widok tabeli jest przejrzysty</small>
+
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>aby zwrócić okresloną liczbę rekordów nalezy w oknie zwróć wpisać ich liczbę/ ich procent </small>
+  <img src="Kwerendy_acces/3.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  
+
+</section>
+<section>
+  <h2>⏳ Zadanie 7.2 – Cel</h2>
+  <p>Znajdź łazik z <span class="important">najdłuższym okresem pomiarów</span> i podaj daty pierwszego i ostatniego pomiaru.</p>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Zadanie podzielimy Na dwie kwerendy zaczniemy od tej która wyświetli nam najstarcszy i najmłodzy pomiar </small>
+  <img src="Kwerendy_acces/8.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small> można zauważyć że w dolnym oknie do wyboru kolumn do wyświetlenia można wstawiać jedno pole kilkukortnie</small>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Następnie korzsytając z konstrutkora wyrażeń odejmujemy obydwie daty od siebie</small>
+  <img src="Kwerendy_acces/10.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small> aby móc skorzystać z konstruktora trzeba kliknąc najpierw na obszar wyboru pola, inaczej opcja kontruktora będzie wyszarzana </small>
+</section>
+<section>
+  <h2>🛰 Zadanie 7.3 – Cel</h2>
+  <p>Znajdź obszary, gdzie <span class="important">nie było pomiaru</span> w roku wysłania łazika.</p>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Zaczynamy od wyszukania obszarów w których doszło do pomiaru w roku lądowania łazika  </small>
+  <img src="Kwerendy_acces/11.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small> jak widać w polu kryteria w kolumnie trzeciej wystarczy podać wartość do której ekordy mają byc porównywane, a w komórce suma wstawić gdzie - działa jak where w SQL</small>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Dalej użyjemy kreatora kwerend -> kreatora kwerend wyszukujących niepsujące dane</small>
+  <img src="Kwerendy_acces/13.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Wybieramy tabele , albo kwerendy - co potrzebujemy</small>
+  <img src="Kwerendy_acces/14.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Wybieramy tabele , albo kwerendę - w której znajdują się dane niepasujące których szukamy</small>
+  <img src="Kwerendy_acces/15.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Wybieramy pola w których znajdują się pasujące dane</small>
+  <img src="Kwerendy_acces/17.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Wybieramy pola które chcemy zobaczyć</small>
+  <img src="Kwerendy_acces/18.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Kilkając zakończ mamy wynik</small>
+  <img src="Kwerendy_acces/19.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>🌍 Zadanie 7.4 – Cel</h2>
+  <p>Znajdź łaziki, które <span class="important">wylądowały na południowej półkuli</span> i wykonywały pomiary na obu półkulach.</p>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Tutaj posłużymy się kilkoma kwerendami pomocniczymi</small>
+  <br> <small>  
+    <br>
+  <ul>
+    <li>Najpierw wyszukamy łaziki które wylądowały na południowej półkuli</li>
+    <li>Następnie wyszukamy łaziki które wykonywały pomiary na półkuli północnej</li>
+    <li>Następnie wyszukamy łaziki które wykonywały pomiary na półkuli południowej</li>
+    <li>Na końcu połączymy te trzy kwerendy aby uzyskać wynik końcowy</li>
+  </ul>
+</small>
+  
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>łaziki które wylądowały na południowej półkuli</small>
+  <img src="Kwerendy_acces/20.png" alt="Wybór okna kreatora kwerend" style="max-width:70%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>łaziki które wykonywały pomiary na półkuli północnej</small>
+  <img src="Kwerendy_acces/22.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>łaziki które wykonywały pomiary na półkuli południowej</small>
+  <img src="Kwerendy_acces/21.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Na końcu połączymy te trzy kwerendy aby uzyskać wynik końcowy</small>
+  <img src="Kwerendy_acces/23.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
+  <small> zauważ że wystarczyło połączyć tabele ze sobą po nazwie i wybrać opcję grupuj według w komórce sumy - access sam łączy i wyświetla tylko ter rekordy które występują w każdej z tabel </small>
+</section>
+<section>
+  <h2>Rozwiązanie</h2>
+  <small>Wynik</small>
+  <img src="Kwerendy_acces/24.png" alt="Wybór okna kreatora kwerend" style="max-width:90%; height:auto; border:1px solid #ccc; padding:8px;">
 </section>
 <section>
   <h1>💡 Dziękuję za uwagę!</h1>
