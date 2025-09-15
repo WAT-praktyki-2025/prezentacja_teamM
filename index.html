@@ -16,6 +16,21 @@
     .highlight { color: #00BFFF; font-weight: bold; }
     .important { color: #FF4500; font-weight: bold; }
     img { border: 2px solid #00BFFF; border-radius: 10px; }
+    .slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.slide {
+  min-width: 100%;
+  padding: 20px;
+  scroll-snap-align: start;
+  box-sizing: border-box;
+}
+.small-text {
+  font-size: 0.85em;
+  line-height: 1.4em;
+}
   </style>
 </head>
 <body>
@@ -544,6 +559,59 @@ GROUP BY Klienci.Nazwisko;
   <p>Znajdź obszar z <span class="important">największą ilością wody</span> (m³) na głębokości ≤ 100 m.</p>
 </section>
 
+<section id="sql-presentation">
+  <h2>🔍 Analiza SQL: Obszar z największą ilością wody</h2>
+  <div class="slider">
+
+    <!-- Slajd 1 -->
+    <div class="slide small-text">
+      <h3>🎯 Cel</h3>
+      <p>Szukamy obszaru z <strong>największą sumą wody</strong> z pomiarów o głębokości ≤ 100 m.</p>
+    </div>
+
+    <!-- Slajd 2 -->
+    <div class="slide small-text">
+      <h3>🧠 SELECT</h3>
+      <pre><code>SELECT TOP 1 o.nazwa_obszaru, SUM(p.ilosc) AS suma_wody_m3</code></pre>
+      <p>Wybieramy nazwę obszaru i sumę ilości wody. TOP 1 ogranicza wynik do najlepszego.</p>
+    </div>
+
+    <!-- Slajd 3 -->
+    <div class="slide small-text">
+      <h3>🔗 FROM + JOIN</h3>
+      <pre><code>FROM obszary AS o
+INNER JOIN pomiary AS p ON p.kod_obszaru = o.kod_obszaru</code></pre>
+      <p>Łączymy tabele po kodzie obszaru, by przypisać pomiary do obszarów.</p>
+    </div>
+
+    <!-- Slajd 4 -->
+    <div class="slide small-text">
+      <h3>📏 WHERE</h3>
+      <pre><code>WHERE p.glebokosc &lt;= 100</code></pre>
+      <p>Filtrujemy pomiary – tylko te do 100 m głębokości.</p>
+    </div>
+
+    <!-- Slajd 5 -->
+    <div class="slide small-text">
+      <h3>📦 GROUP BY</h3>
+      <pre><code>GROUP BY o.nazwa_obszaru</code></pre>
+      <p>Grupujemy dane według obszaru, by obliczyć sumę wody dla każdego.</p>
+    </div>
+
+    <!-- Slajd 6 -->
+    <div class="slide small-text">
+      <h3>📊 ORDER BY</h3>
+      <pre><code>ORDER BY SUM(p.ilosc) DESC</code></pre>
+      <p>Sortujemy malejąco według sumy wody – największy wynik na górze.</p>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
 <section>
   <h2>Kod SQL</h2>
   <pre><code class="sql">
@@ -559,17 +627,7 @@ ORDER BY SUM(p.ilosc) DESC;
 </section>
 
 <section>
-  <h2>Ogólne omówienie</h2>
-  <ul>
-    <li>Łączymy obszary z pomiarami.</li>
-    <li>Filtrujemy tylko pomiary do 100 m głębokości.</li>
-    <li>Sumujemy ilość wody dla każdego obszaru.</li>
-    <li>Wybieramy obszar z największą sumą.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Analiza linia po linii</h2>
+  <h2>PODSUMOWANIE</h2>
   <ul>
     <li><code>SELECT TOP 1</code> – wybierz tylko pierwszy rekord po sortowaniu.</li>
     <li><code>SUM(p.ilosc)</code> – sumuje ilość wody.</li>
@@ -605,6 +663,67 @@ ORDER BY SUM(p.ilosc) DESC;
   <p>Znajdź łazik z <span class="important">najdłuższym okresem pomiarów</span> i podaj daty pierwszego i ostatniego pomiaru.</p>
 </section>
 
+
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Łączymy łaziki z ich pomiarami.</li>
+    <li>Znajdujemy najwcześniejszy i najpóźniejszy pomiar.</li>
+    <li>Obliczamy różnicę w dniach.</li>
+    <li>Wybieramy łazik z największą różnicą.</li>
+  </ul>
+</section>
+
+
+<section id="sql-laziki">
+  <h2>🛰️ Analiza SQL: Najdłuższy okres pomiarowy łazika</h2>
+  <div class="slider">
+
+    <!-- Slajd 1 -->
+    <div class="slide small-text">
+      <h3>🎯 Cel</h3>
+      <p>Znajdź łazika, który wykonywał pomiary przez <strong>najdłuższy okres</strong> — od pierwszego do ostatniego dnia.</p>
+    </div>
+
+    <!-- Slajd 2 -->
+    <div class="slide small-text">
+      <h3>🧠 SELECT</h3>
+      <pre><code>SELECT TOP 1 l.nazwa_lazika,
+       MIN(p.data_pomiaru) AS pierwszy_pomiar,
+       MAX(p.data_pomiaru) AS ostatni_pomiar,
+       DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) AS liczba_dni</code></pre>
+      <p>Wybieramy nazwę łazika, daty skrajnych pomiarów i liczymy liczbę dni między nimi.</p>
+    </div>
+
+    <!-- Slajd 3 -->
+    <div class="slide small-text">
+      <h3>🔗 JOIN</h3>
+      <pre><code>FROM laziki AS l
+INNER JOIN pomiary AS p
+    ON l.nr_lazika = p.nr_lazika</code></pre>
+      <p>Łączymy tabele <code>laziki</code> i <code>pomiary</code> po numerze łazika, by przypisać pomiary do konkretnego pojazdu.</p>
+    </div>
+
+    <!-- Slajd 4 -->
+    <div class="slide small-text">
+      <h3>📦 GROUP BY</h3>
+      <pre><code>GROUP BY l.nazwa_lazika</code></pre>
+      <p>Grupujemy dane według nazwy łazika, by obliczyć zakres dat dla każdego z nich.</p>
+    </div>
+
+    <!-- Slajd 5 -->
+    <div class="slide small-text">
+      <h3>📊 ORDER BY</h3>
+      <pre><code>ORDER BY DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) DESC</code></pre>
+      <p>Sortujemy malejąco według liczby dni — łazik z najdłuższym okresem pomiarowym będzie pierwszy.</p>
+    </div>
+
+  </div>
+</section>
+
+
+
 <section>
   <h2>Kod SQL</h2>
   <pre><code class="sql">
@@ -621,17 +740,7 @@ ORDER BY DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) DESC;
 </section>
 
 <section>
-  <h2>Ogólne omówienie</h2>
-  <ul>
-    <li>Łączymy łaziki z ich pomiarami.</li>
-    <li>Znajdujemy najwcześniejszy i najpóźniejszy pomiar.</li>
-    <li>Obliczamy różnicę w dniach.</li>
-    <li>Wybieramy łazik z największą różnicą.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Analiza linia po linii</h2>
+  <h2>PODSUMOWANIE</h2>
   <ul>
     <li><code>MIN()</code> – najwcześniejsza data pomiaru.</li>
     <li><code>MAX()</code> – najpóźniejsza data pomiaru.</li>
@@ -666,6 +775,76 @@ ORDER BY DATEDIFF('d', MIN(p.data_pomiaru), MAX(p.data_pomiaru)) DESC;
   <p>Znajdź obszary, gdzie <span class="important">nie było pomiaru</span> w roku wysłania łazika.</p>
 </section>
 
+
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Podzapytanie wybiera obszary, w których był pomiar w roku wysłania łazika.</li>
+    <li><span class="highlight">NOT IN</span> – odrzuca te obszary, które spełniają warunek w podzapytaniu.</li>
+    <li>W efekcie zostają tylko obszary bez takich pomiarów.</li>
+  </ul>
+</section>
+
+<section id="sql-obszary">
+  <h2>📍 Analiza SQL: Obszary bez pomiarów w roku wysłania łazika</h2>
+  <div class="slider">
+
+    <!-- Slajd 1 -->
+    <div class="slide small-text">
+      <h3>🎯 Cel</h3>
+      <p>Znajdź obszary, w których <strong>nie wykonano pomiarów</strong> w roku wysłania łazika.</p>
+    </div>
+
+    <!-- Slajd 2 -->
+    <div class="slide small-text">
+      <h3>🧠 SELECT</h3>
+      <pre><code>SELECT o.nazwa_obszaru</code></pre>
+      <p>Wybieramy nazwę obszaru z tabeli <code>obszary</code>.</p>
+    </div>
+
+    <!-- Slajd 3 -->
+    <div class="slide small-text">
+      <h3>🔍 FROM</h3>
+      <pre><code>FROM obszary AS o</code></pre>
+      <p>Używamy tabeli <code>obszary</code> jako głównej.</p>
+    </div>
+
+    <!-- Slajd 4 -->
+    <div class="slide small-text">
+      <h3>🚫 WHERE NOT IN</h3>
+      <pre><code>WHERE o.kod_obszaru NOT IN ( ... )</code></pre>
+      <p>Wykluczamy obszary, które pojawiają się w zagnieżdżonym zapytaniu.</p>
+    </div>
+
+    <!-- Slajd 5 -->
+    <div class="slide small-text">
+      <h3>🔗 Podzapytanie: JOIN</h3>
+      <pre><code>SELECT DISTINCT p.kod_obszaru
+FROM pomiary AS p
+INNER JOIN laziki AS l
+  ON p.nr_lazika = l.nr_lazika</code></pre>
+      <p>Łączymy pomiary z łazikami, by sprawdzić, gdzie i kiedy były wykonane.</p>
+    </div>
+
+    <!-- Slajd 6 -->
+    <div class="slide small-text">
+      <h3>📅 WHERE w podzapytaniu</h3>
+      <pre><code>WHERE YEAR(p.data_pomiaru) = l.rok_wyslania</code></pre>
+      <p>Filtrujemy tylko te pomiary, które wykonano w roku wysłania łazika.</p>
+    </div>
+
+    <!-- Slajd 7 -->
+    <div class="slide small-text">
+      <h3>📊 ORDER BY</h3>
+      <pre><code>ORDER BY o.nazwa_obszaru</code></pre>
+      <p>Sortujemy wynik alfabetycznie według nazwy obszaru.</p>
+    </div>
+
+  </div>
+</section>
+
+
 <section>
   <h2>Kod SQL</h2>
   <pre><code class="sql">
@@ -682,18 +861,9 @@ ORDER BY o.nazwa_obszaru;
   </code></pre>
 </section>
 
-<section>
-  <h2>Ogólne omówienie</h2>
-  <ul>
-    <li>Podzapytanie wybiera obszary, w których był pomiar w roku wysłania łazika.</li>
-    <li><span class="highlight">NOT IN</span> – odrzuca te obszary, które spełniają warunek w podzapytaniu.</li>
-    <li>W efekcie zostają tylko obszary bez takich pomiarów.</li>
-  </ul>
-</section>
-
 <!-- Slajd 1: Analiza głównych instrukcji -->
 <section>
-  <h2>🔍 Analiza linia po linii – część 1</h2>
+  <h2>🔍 PODSUMOWANIE – część 1</h2>
   <ul style="font-size:0.95em;">
     <li><code>SELECT o.nazwa_obszaru</code> – wybieramy nazwy obszarów.</li>
     <li><code>WHERE o.kod_obszaru NOT IN (...)</code> – filtrujemy, aby wykluczyć obszary z listy w podzapytaniu.</li>
@@ -703,7 +873,7 @@ ORDER BY o.nazwa_obszaru;
 
 <!-- Slajd 2: Analiza podzapytania -->
 <section>
-  <h2>🔍 Analiza linia po linii – część 2</h2>
+  <h2>🔍 PODSUMOWANIE – część 2</h2>
   <ul style="font-size:0.95em;">
     <li><code>SELECT DISTINCT p.kod_obszaru</code> – unikalne kody obszarów z pomiarami.</li>
     <li><code>INNER JOIN laziki</code> – łączenie pomiarów z łazikami.</li>
@@ -736,6 +906,68 @@ ORDER BY o.nazwa_obszaru;
   <p>Znajdź łaziki, które <span class="important">wylądowały na południowej półkuli</span> i wykonywały pomiary na obu półkulach.</p>
 </section>
 
+
+<section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Filtrujemy łaziki, które wylądowały na południowej półkuli.</li>
+    <li>Sprawdzamy, czy w pomiarach są punkty z obu półkul.</li>
+    <li>Używamy <span class="highlight">HAVING</span> do warunków po grupowaniu.</li>
+  </ul>
+</section>
+
+<section id="sql-laziki-polkulowe">
+  <h2>🧭 Analiza SQL: Łaziki badające obie półkule</h2>
+  <div class="slider">
+
+    <!-- Slajd 1 -->
+    <div class="slide small-text">
+      <h3>🎯 Cel</h3>
+      <p>Znajdź łaziki, które <strong>wylądowały na południu</strong> i wykonywały pomiary zarówno na <strong>półkuli północnej</strong>, jak i <strong>południowej</strong>.</p>
+    </div>
+
+    <!-- Slajd 2 -->
+    <div class="slide small-text">
+      <h3>🧠 SELECT</h3>
+      <pre><code>SELECT l.nazwa_lazika</code></pre>
+      <p>Wybieramy nazwę łazika, który spełnia warunki.</p>
+    </div>
+
+    <!-- Slajd 3 -->
+    <div class="slide small-text">
+      <h3>🔗 JOIN</h3>
+      <pre><code>FROM Laziki AS l
+INNER JOIN Pomiary AS p
+  ON l.nr_lazika = p.nr_lazika</code></pre>
+      <p>Łączymy łaziki z pomiarami po numerze łazika.</p>
+    </div>
+
+    <!-- Slajd 4 -->
+    <div class="slide small-text">
+      <h3>📍 WHERE</h3>
+      <pre><code>WHERE l.wsp_ladowania LIKE "*S*"</code></pre>
+      <p>Filtrujemy łaziki, które wylądowały na południowej półkuli.</p>
+    </div>
+
+    <!-- Slajd 5 -->
+    <div class="slide small-text">
+      <h3>📦 GROUP BY</h3>
+      <pre><code>GROUP BY l.nazwa_lazika</code></pre>
+      <p>Grupujemy dane według nazwy łazika, by analizować jego pomiary.</p>
+    </div>
+
+    <!-- Slajd 6 -->
+    <div class="slide small-text">
+      <h3>📊 HAVING</h3>
+      <pre><code>HAVING SUM(IIF(p.wspolrzedne LIKE "*N*", 1, 0)) > 0
+  AND SUM(IIF(p.wspolrzedne LIKE "*S*", 1, 0)) > 0</code></pre>
+      <p>Sprawdzamy, czy łazik wykonał pomiary na obu półkulach — północnej i południowej.</p>
+    </div>
+
+  </div>
+</section>
+
+
 <section>
   <h2>Kod SQL</h2>
   <pre><code class="sql">
@@ -751,16 +983,7 @@ HAVING SUM(IIF(p.wspolrzedne LIKE "*N*", 1, 0)) > 0
 </section>
 
 <section>
-  <h2>Ogólne omówienie</h2>
-  <ul>
-    <li>Filtrujemy łaziki, które wylądowały na południowej półkuli.</li>
-    <li>Sprawdzamy, czy w pomiarach są punkty z obu półkul.</li>
-    <li>Używamy <span class="highlight">HAVING</span> do warunków po grupowaniu.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Analiza linia po linii</h2>
+  <h2>PODSUMOWANIE</h2>
   <ul>
     <li><code>WHERE l.wsp_ladowania LIKE "*S*"</code> – wybiera łaziki z literą "S" w współrzędnych lądowania.</li>
     <li><code>GROUP BY l.nazwa_lazika</code> – grupuje dane według łazika.</li>
@@ -795,6 +1018,78 @@ HAVING SUM(IIF(p.wspolrzedne LIKE "*N*", 1, 0)) > 0
 </section>
 
 <section>
+  <h2>Ogólne omówienie</h2>
+  <ul>
+    <li>Łączymy cztery tabele: Producent, Laziki, Pomiary, Obszary.</li>
+    <li>Filtrujemy tylko pomiary w Arcadii z roku 2060.</li>
+    <li>Usuwamy duplikaty producentów.</li>
+    <li>Sortujemy alfabetycznie.</li>
+  </ul>
+</section>
+
+<section id="sql-producenci-arcadia">
+  <h2>🏭 Analiza SQL: Producenci łazików badających Arcadię w 2060</h2>
+  <div class="slider">
+
+    <!-- Slajd 1 -->
+    <div class="slide small-text">
+      <h3>🎯 Cel</h3>
+      <p>Znajdź producentów łazików, które wykonywały pomiary w <strong>obszarze Arcadia</strong> w roku <strong>2060</strong>.</p>
+    </div>
+
+    <!-- Slajd 2 -->
+    <div class="slide small-text">
+      <h3>🧠 SELECT DISTINCT</h3>
+      <pre><code>SELECT DISTINCT pr.nazwa</code></pre>
+      <p>Wybieramy unikalne nazwy producentów.</p>
+    </div>
+
+    <!-- Slajd 3 -->
+    <div class="slide small-text">
+      <h3>🔗 JOIN: Producent + Łaziki</h3>
+      <pre><code>FROM Producent AS pr
+INNER JOIN Laziki AS l
+  ON pr.kod_producenta = l.kod_producenta</code></pre>
+      <p>Łączymy producentów z łazikami po kodzie producenta.</p>
+    </div>
+
+    <!-- Slajd 4 -->
+    <div class="slide small-text">
+      <h3>🔗 JOIN: Pomiary + Obszary</h3>
+      <pre><code>INNER JOIN Pomiary AS pm
+INNER JOIN Obszary AS o
+  ON pm.kod_obszaru = o.kod_obszaru</code></pre>
+      <p>Łączymy pomiary z obszarami po kodzie obszaru.</p>
+    </div>
+
+    <!-- Slajd 5 -->
+    <div class="slide small-text">
+      <h3>🔗 JOIN: Łaziki + Pomiary</h3>
+      <pre><code>ON l.nr_lazika = pm.nr_lazika</code></pre>
+      <p>Łączymy łaziki z pomiarami po numerze łazika.</p>
+    </div>
+
+    <!-- Slajd 6 -->
+    <div class="slide small-text">
+      <h3>📍 WHERE</h3>
+      <pre><code>WHERE o.nazwa_obszaru = "Arcadia"
+  AND YEAR(pm.data_pomiaru) = 2060</code></pre>
+      <p>Filtrujemy pomiary wykonane w Arcadii w roku 2060.</p>
+    </div>
+
+    <!-- Slajd 7 -->
+    <div class="slide small-text">
+      <h3>📊 ORDER BY</h3>
+      <pre><code>ORDER BY pr.nazwa</code></pre>
+      <p>Sortujemy wyniki alfabetycznie według nazwy producenta.</p>
+    </div>
+
+  </div>
+</section>
+
+
+
+<section>
   <h2>Kod SQL</h2>
   <pre><code class="sql">
 SELECT DISTINCT pr.nazwa
@@ -812,17 +1107,7 @@ ORDER BY pr.nazwa;
 </section>
 
 <section>
-  <h2>Ogólne omówienie</h2>
-  <ul>
-    <li>Łączymy cztery tabele: Producent, Laziki, Pomiary, Obszary.</li>
-    <li>Filtrujemy tylko pomiary w Arcadii z roku 2060.</li>
-    <li>Usuwamy duplikaty producentów.</li>
-    <li>Sortujemy alfabetycznie.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Analiza linia po linii</h2>
+  <h2>PODSUMOWANIE</h2>
   <ul>
     <li><code>SELECT DISTINCT pr.nazwa</code> – wybiera unikalne nazwy producentów.</li>
     <li><code>INNER JOIN</code> – łączy tabele po kluczach obcych.</li>
@@ -832,9 +1117,9 @@ ORDER BY pr.nazwa;
   </ul>
 </section>
 
-<!-- Podsumowanie -->
+<!-- WNIOSKI -->
 <section>
-  <h2>🎯 Podsumowanie</h2>
+  <h2>🎯 WNIOSKI</h2>
   <ul>
     <li>Nauczyliśmy się łączyć tabele w Access SQL przy pomocy <span class="highlight">JOIN</span>.</li>
     <li>Wykorzystaliśmy <span class="highlight">GROUP BY</span>, <span class="highlight">HAVING</span>, <span class="highlight">WHERE</span> i <span class="highlight">DISTINCT</span>.</li>
