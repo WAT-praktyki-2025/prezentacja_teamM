@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Rozdział 3 – Podsumowanie zadań 7.1–7.5</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.4.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.4.0/dist/theme/serif.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Tytuł -->
+      <section>
+        <h1>📘 Rozdział 3</h1>
+        <p>Podsumowanie zadań 7.1–7.5</p>
+        <p><em>SQL – analiza danych pomiarowych i przestrzennych</em></p>
+      </section>
+
+      <!-- Zadanie 7.1 -->
+      <section>
+        <h2>🧪 Zadanie 7.1</h2>
+        <p>Cel: znaleźć obszar z największą ilością wody na głębokości do 100 m.</p>
+        <p>Użyto <code>JOIN</code> do połączenia pomiarów z obszarami.</p>
+        <p><code>WHERE</code> ogranicza głębokość, <code>GROUP BY</code> agreguje dane, <code>ORDER BY</code> sortuje wynik.</p>
+      </section>
+
+      <section>
+        <h2>💻 Kod SQL – 7.1</h2>
+        <pre><code class="sql">
+SELECT o.nazwa_obszaru, SUM(p.ilosc_wody) AS suma_wody
+FROM pomiary p
+JOIN obszary o ON p.nr_obszaru = o.kod_obszaru
+WHERE p.glebokosc <= 100
+GROUP BY o.nazwa_obszaru
+ORDER BY suma_wody DESC;
+        </code></pre>
+      </section>
+
+      <!-- Zadanie 7.2 -->
+      <section>
+        <h2>🧪 Zadanie 7.2</h2>
+        <p>Cel: znaleźć łazika z najdłuższym okresem pomiarów.</p>
+        <p>Użyto <code>MAX()</code> i <code>MIN()</code> do obliczenia zakresu dat.</p>
+        <p><code>GROUP BY</code> pozwala obliczyć długość misji dla każdego łazika.</p>
+      </section>
+
+      <section>
+        <h2>💻 Kod SQL – 7.2</h2>
+        <pre><code class="sql">
+SELECT l.nazw_lazika, MAX(p.data_pomiaru) - MIN(p.data_pomiaru) AS okres
+FROM laziki l
+JOIN pomiary p ON l.nr_lazika = p.nr_lazika
+GROUP BY l.nazw_lazika;
+        </code></pre>
+      </section>
+
+      <!-- Zadanie 7.3 -->
+      <section>
+        <h2>🧪 Zadanie 7.3</h2>
+        <p>Cel: znaleźć obszary bez pomiaru w roku wysłania łazika.</p>
+        <p>Użyto <code>NOT IN</code> z podzapytaniem, które wybiera obszary z pomiarami w roku wysłania.</p>
+        <p><code>YEAR()</code> wyciąga rok z daty pomiaru.</p>
+      </section>
+
+      <section>
+        <h2>💻 Kod SQL – 7.3</h2>
+        <pre><code class="sql">
+SELECT o.nazwa_obszaru
+FROM obszary o
+WHERE o.kod_obszaru NOT IN (
+  SELECT p.kod_obszaru
+  FROM pomiary p
+  JOIN laziki l ON p.nr_lazika = l.nr_lazika
+  WHERE YEAR(p.data_pomiaru) = l.rok_wyslania
+);
+        </code></pre>
+      </section>
+
+      <!-- Zadanie 7.4 -->
+      <section>
+        <h2>🧪 Zadanie 7.4</h2>
+        <p>Cel: znaleźć łaziki, które badały obie półkule.</p>
+        <p>Użyto <code>LIKE</code> do filtrowania współrzędnych, <code>IIF()</code> do zliczania pomiarów na półkulach.</p>
+        <p><code>HAVING</code> sprawdza warunki po grupowaniu.</p>
+      </section>
+
+      <section>
+        <h2>💻 Kod SQL – 7.4</h2>
+        <pre><code class="sql">
+SELECT l.nazwa_lazika
+FROM laziki l
+JOIN pomiary p ON l.nr_lazika = p.nr_lazika
+WHERE l.wsp_ladowania LIKE "*S*"
+GROUP BY l.nazwa_lazika
+HAVING SUM(IIF(p.wspolrzedne LIKE "*N*", 1, 0)) > 0
+   AND SUM(IIF(p.wspolrzedne LIKE "*S*", 1, 0)) > 0;
+        </code></pre>
+      </section>
+
+      <!-- Zadanie 7.5 -->
+      <section>
+        <h2>🧪 Zadanie 7.5</h2>
+        <p>Cel: znaleźć producentów łazików, które wykonywały pomiary w „Arcadia” w roku 2060.</p>
+        <p>Użyto <code>INNER JOIN</code> na czterech tabelach, <code>DISTINCT</code> do usunięcia duplikatów.</p>
+      </section>
+
+      <section>
+        <h2>💻 Kod SQL – 7.5</h2>
+        <pre><code class="sql">
+SELECT DISTINCT pr.nazwa
+FROM (Producent AS pr
+INNER JOIN Laziki AS l ON pr.kod_producenta = l.kod_producenta)
+INNER JOIN (Pomiary AS pm
+INNER JOIN Obszary AS o ON pm.kod_obszaru = o.kod_obszaru)
+ON l.nr_lazika = pm.nr_lazika
+WHERE o.nazwa_obszaru = "Arcadia"
+AND YEAR(pm.data_pomiaru) = 2060
+ORDER BY pr.nazwa;
+        </code></pre>
+      </section>
+
+      <!-- Wnioski -->
+      <section>
+        <h2>📌 Wnioski</h2>
+        <ul>
+          <li>Każde zadanie wymagało innego podejścia: filtr, agregacja, podzapytanie, analiza przestrzenna</li>
+          <li><code>JOIN</code> to podstawa pracy z wieloma tabelami</li>
+          <li><code>GROUP BY</code> i <code>HAVING</code> pozwalają analizować grupy</li>
+          <li><code>NOT IN</code> wykrywa brak danych</li>
+          <li><code>DISTINCT</code> usuwa powtórzenia</li>
+        </ul>
+      </section>
+
+      <!-- Checklist -->
+      <section>
+        <h2>✅ Umiejętności po rozdziale 3</h2>
+        <ul>
+          <li>🔹 Łączenie danych z wielu tabel</li>
+          <li>🔹 Filtrowanie danych według warunków</li>
+          <li>🔹 Grupowanie i agregacja</li>
+          <li>🔹 Tworzenie podzapytań</li>
+          <li>🔹 Analiza danych przestrzennych i czasowych</li>
+        </ul>
+      </section>
+
+      <!-- Refleksja -->
+      <section>
+        <h2>🧠 Refleksja</h2>
+        <p>Każde zapytanie SQL to odpowiedź na konkretne pytanie.</p>
+        <p>Rozumienie danych i ich struktury jest ważniejsze niż znajomość składni.</p>
+      </section>
+
+      <!-- Zakończenie -->
+      <section>
+        <h2>🎓 Gratulacje!</h2>
+        <p>Ukończyłeś zestaw zadań 7.1–7.5 i nauczyłeś się wielu technik SQL.</p>
+        <p>
+        <p>Masz za sobą solidne podstawy: łączenie tabel, filtrowanie, grupowanie, podzapytania i analiza przestrzenna.</p>
+              </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.4.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'fade'
+    });
+  </script>
+</body>
+</html>
