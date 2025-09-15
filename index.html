@@ -22,8 +22,100 @@
 
 <div class="reveal">
 <div class="slides">
+<script>
+  // Zamienia wskazane <img> na <canvas> i na kliknięcie pokazuje "spotlight" pod myszką:
+  // tło przyciemnione, a w okręgu pod kursorem oryginalny obraz lekko rozjaśniony.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('img[src^="przygotowanie/"], img[src^="Kwerendy_acces/"], img[src^="odpowiedzi/"]').forEach(img => {
+      if (!img.complete) img.addEventListener('load', () => makeEditable(img));
+      else makeEditable(img);
+    });
+  });
 
+  function makeEditable(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = img.naturalWidth || 800;
+    canvas.height = img.naturalHeight || 600;
+
+    // zachowaj widoczne rozmiary (skalowanie CSS)
+    canvas.style.width = img.style.width || img.getAttribute('width') || '80%';
+    canvas.style.height = img.style.height || 'auto';
+    canvas.className = img.className;
+
+    img.parentNode.replaceChild(canvas, img);
+
+    // narysuj obraz i zapisz oryginał (ImageData)
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    try { canvas._origImageData = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch (e) { canvas._origImageData = null; }
+
+    // klik -> spotlight pod kursorem (przyciemnione tło + rozjaśniony okrąg z miękkimi krawędziami)
+    canvas.addEventListener('click', (ev) => {
+      const r = canvas.getBoundingClientRect();
+      const x = (ev.clientX - r.left) * (canvas.width / r.width);
+      const y = (ev.clientY - r.top) * (canvas.height / r.height);
+      const radius = Math.round(Math.min(canvas.width, canvas.height) * 0.18); // dostosuj
+      const darkAlpha = 0.65;   // przyciemnienie tła (0..1)
+      const brighten = 0.20;    // siła rozjaśnienia środka (0..1)
+      applySpotlightBrightCenter(ctx, canvas, x, y, radius, darkAlpha, brighten);
+    });
+
+    // dblclick -> przywróć oryginał
+    canvas.addEventListener('dblclick', () => {
+      if (canvas._origImageData) ctx.putImageData(canvas._origImageData, 0, 0);
+    });
+  }
+
+  // Rysuje efekt: 1) przywraca oryginał, 2) nakłada półprzezroczyste przyciemnienie,
+  // 3) wycina z przyciemnienia miękkie okno (destination-out), 4) lekko rozjaśnia środek (lighter).
+  function applySpotlightBrightCenter(ctx, canvas, cx, cy, radius = 80, darkAlpha = 0.6, brighten = 0.18) {
+  if (!canvas._origImageData) return;
+  // przywróć oryginał
+  ctx.putImageData(canvas._origImageData, 0, 0);
+
+  const w = canvas.width, h = canvas.height;
+
+  // 1) nałóż półprzezroczyste przyciemnienie na cały obraz
+  ctx.save();
+  ctx.fillStyle = `rgba(0,0,0,${darkAlpha})`;
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+
+  // zwiększ promień o 10px zgodnie z prośbą
+  radius = Math.round(radius + 10);
+
+  // 2) przygotuj offscreen z oryginałem
+  const off = document.createElement('canvas');
+  off.width = w; off.height = h;
+  const offCtx = off.getContext('2d');
+  offCtx.imageSmoothingEnabled = false;
+  offCtx.putImageData(canvas._origImageData, 0, 0);
+
+  // 3) przygotuj tmp canvas i "wytnij" twarde kółko z oryginału
+  const tmp = document.createElement('canvas');
+  tmp.width = w; tmp.height = h;
+  const tctx = tmp.getContext('2d');
+  tctx.imageSmoothingEnabled = false;
+
+  // narysuj oryginał na tmp
+  tctx.drawImage(off, 0, 0);
+
+  // zachowaj tylko obszar w kole — solidne wypełnienie daje twardą krawędź
+  tctx.globalCompositeOperation = 'destination-in';
+  tctx.beginPath();
+  tctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  tctx.closePath();
+  tctx.fillStyle = 'rgba(0,0,0,1)';
+  tctx.fill();
+  tctx.globalCompositeOperation = 'source-over';
+
+  // 4) narysuj wycięte twarde kółko (oryginał) na głównym ctx — bez gradientów i bez rozjaśniania
+  ctx.drawImage(tmp, 0, 0);
+}
+</script>
 <!-- Intro -->
+ 
 <section>
   <h1>🚀 SQL w MS Access</h1>
   <h3>Realizacja zadań 7.1–7.5 krok po kroku</h3>
@@ -40,7 +132,7 @@
     Można ją porównać do elektronicznego segregatora lub szafy z dokumentami — wszystko jest posegregowane, łatwe do znalezienia i przeszukania.
   </p>
 </section>
-
+<section>
 <!-- Slajd 2: Czym jest tabela -->
 <section>
   <h2>📋 Czym jest tabela?</h2>
@@ -340,7 +432,8 @@ JOIN Zamowienia ON Klienci.ID = Zamowienia.KlientID
 GROUP BY Klienci.Nazwisko;
   </pre>
 </section>
-
+</section>
+<section>
 <!-- Slajd: Wprowadzenie do przygotowania Accessa -->
 <section>
   <h2>📷 Przygotowanie Accessa – krok po kroku</h2>
@@ -440,8 +533,11 @@ GROUP BY Klienci.Nazwisko;
   <img src="przygotowanie/18.png" alt="Przygotowanie Accessa krok 18" style="width:80%;">
 </section>
 
-
-
+</section>
+<section>
+<section>
+  <h1>Zadania 7.1-7.5 z urzyciem SQL</h1>
+</section>
 <!-- Zadanie 7.1 -->
 <section>
   <h2>💧 Zadanie 7.1 – Cel</h2>
@@ -483,7 +579,7 @@ ORDER BY SUM(p.ilosc) DESC;
     <li><code>ORDER BY ... DESC</code> – sortuje malejąco.</li>
   </ul>
 </section>
-<section>
+
  <!-- Slajd: Opis wyniku -->
 <section>
   <h2>📸 Wynik działania zapytania w Accessie</h2>
@@ -746,7 +842,18 @@ ORDER BY pr.nazwa;
     <li>Teraz możesz samodzielnie modyfikować zapytania i analizować inne dane.</li>
   </ul>
 </section>
-
+</section>
+<section>
+<!--kreator kwerendy access-->
+<section>
+  <h2> Zadania 7.1-7.5 z urzyciem kreatora kwerend MS Access</h2>
+</section>
+<section>
+  <h2>💧 Zadanie 7.1 – Cel</h2>
+  <p>Znajdź obszar z <span class="important">największą ilością wody</span> (m³) na głębokości ≤ 100 m.</p>
+</section>
+<section></section>
+</section>
 <section>
   <h1>💡 Dziękuję za uwagę!</h1>
   <p>Spróbuj zmienić warunki w zapytaniach i zobacz, jak zmienia się wynik.</p>
